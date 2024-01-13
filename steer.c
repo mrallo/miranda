@@ -105,7 +105,7 @@ word nostdenv=0;  /* if set to 1 mira does not load stdenv at startup */
 word baded=0; /* see fixeditor() */
 char *miralib=NULL;
 char *mirahdr,*lmirahdr;
-char *promptstr="Miranda ";
+char *promptstr="> "; /* Was 'Miranda ', until version 2.066 */
 char *obsuffix="x";
 FILE *s_in=NULL;
 extern word commandmode; /* true only when reading command-level expressions */
