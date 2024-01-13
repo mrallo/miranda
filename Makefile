@@ -42,10 +42,10 @@ miralib/menudriver: menudriver.c Makefile
 tellcc:
 	@echo $(CC) $(CFLAGS)
 cleanup:
-#to be done on moving to a new host
 	-rm -rf *.o fdate miralib/menudriver mira$(EX)
 	./unprotect
 	-rm -f miralib/preludx miralib/stdenv.x miralib/ex/*.x #miralib/ex/*/*.x
+.host:
 	./hostinfo > .host
 install:
 	make -s all
