@@ -1,6 +1,8 @@
 BIN=usr/local/bin
+DST=dist
 LIB=usr/local/lib
 MAN=usr/local/man/man1
+
 CC = gcc -w
 CFLAGS = 
 EX = 
@@ -39,7 +41,7 @@ tellcc:
 	@echo $(CC) $(CFLAGS)
 
 cleanup:
-	-rm -rf *.o fdate miralib/menudriver mira$(EX)
+	-rm -rf *.o fdate miralib/menudriver mira$(EX) $(DST)
 	./unprotect
 	-rm -f miralib/preludx miralib/stdenv.x miralib/ex/*.x
 
@@ -59,14 +61,11 @@ install: all
 
 release: all
 	-rm -rf usr
-	mkdir -p $(BIN) $(LIB) $(MAN)
+	mkdir -p $(BIN) $(DST) $(LIB) $(MAN)
 	cp mira$(EX) $(BIN)
 	cp mira.1 $(MAN)
-	./protect
 	cp -pPR miralib $(LIB)/miralib
-	./unprotect
-	find usr -exec chown `./ugroot` {} \;
-	tar czf `rname`.tgz ./usr
+	tar czf $(DST)/miranda-`./mira -v`.tgz ./usr
 	-rm -rf usr
 
 SOURCES = .xversion big.c big.h gencdecs data.h data.c lex.h lex.c reduce.c rules.y \

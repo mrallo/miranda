@@ -227,6 +227,7 @@ char *argv[];
         else fprintf(stderr,"could not open %s\n",logfilname);
         ARGC=argc-2,ARGV=argv+2,magic=1,verbosity=0; } else
     if(strcmp(argv[1],"-man")==0){ manonly=1; break; } else
+    if (strcmp(argv[1], "-v") == 0) printver(), exit(0); else
     if(strcmp(argv[1],"-version")==0)v_info(0),exit(0); else
     if(strcmp(argv[1],"-V")==0)v_info(1),exit(0); else
     if(strcmp(argv[1],"-make")==0) making=1,verbosity=0; else
@@ -781,6 +782,10 @@ int normal(f) /* s has ".m" suffix */
 char *f;
 { int n=strlen(f);
   return n>=2&&strcmp(f+n-2,".m")==0;
+}
+
+void printver() {
+  printf("%s", strvers(version));
 }
 
 void v_info(int full)
