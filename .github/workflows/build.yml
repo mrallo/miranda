@@ -1,3 +1,5 @@
+name: Build project
+
 on:
   # Run on pull request events that target the main branch
   pull_request:
