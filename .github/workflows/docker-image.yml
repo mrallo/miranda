@@ -40,10 +40,15 @@ jobs:
 
           docker build -t mrallo/mira:latest docker-context
 
-      - name: Login to Docker Hub
-        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-
-      - name: Push image
-        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
-        run: docker push mrallo/mira:latest
+      - name: Login and push to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          if [ -n "$DOCKERHUB_USERNAME" ]; then
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            run: docker push mrallo/mira:latest
+          else
+            echo "Skipping Docker push: DOCKERHUB_USERNAME not set"
+          fi
+ 
