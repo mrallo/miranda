@@ -31,3 +31,20 @@ jobs:
 
       - name: Build the project
         run: make
+
+      - name: Run ./mira -V and capture output
+        id: version
+        run: |
+          if [ -f mira ]; then
+            ./mira -V | tee mira-version.txt
+          else
+            echo "mira binary not found after build"
+            exit 1
+          fi
+
+      - name: Add version output to GitHub Actions summary
+        run: |
+          echo '### `mira -V` Output' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat mira-version.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
