@@ -1,0 +1,31 @@
+on:
+  # Run on pull request events that target the main branch
+  pull_request:
+    branches:
+    - main
+
+  # Run on push events to the main and feature branches
+  push:
+    branches:
+    - main
+    - feature/*
+
+  # Enables a manual run workflow
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential byacc
+
+      - name: Build the project
+        run: make
