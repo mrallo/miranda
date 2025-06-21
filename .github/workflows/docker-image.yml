@@ -1,13 +1,14 @@
-name: Docker Image CI
+name: Dockerize Miranda
 
 on:
   workflow_run:
-    workflows: ["Build project"]
+    workflows: ["Build Miranda"]
     types:
       - completed
 
 jobs:
   docker:
+    name: Docker
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
@@ -15,18 +16,18 @@ jobs:
       - name: Download miranda artifacts
         uses: actions/download-artifact@v4
         with:
-          name: mira-runtime
-          path: ./docker-context
+          name: mira-binary
+          path: ./artifacts
 
       - name: Create slim Docker image
         run: |
           # Create Dockerfile
-          cat <<'EOF' > docker-context/Dockerfile
+          cat <<'EOF' > artifacts/Dockerfile
           FROM debian:bookworm-slim
 
           # Copy all necessary files
-          COPY mira.1 /usr/share/man/man1/mira.1
           COPY miralib/ /usr/local/lib/miralib/
+          COPY mira.1 /usr/share/man/man1/mira.1
           COPY mira /usr/local/bin/mira
 
           # Optional: make man page available (only if man is installed in container)
@@ -38,7 +39,7 @@ jobs:
           ENTRYPOINT ["/usr/local/bin/mira"]
           EOF
 
-          docker build -t mrallo/mira:latest docker-context
+          docker build -t mrallo/mira:latest artifacts
 
       - name: Login and push to Docker Hub
         env:
