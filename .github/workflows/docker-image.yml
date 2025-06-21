@@ -40,7 +40,7 @@ jobs:
           ENTRYPOINT ["/usr/local/bin/mira"]
           EOF
 
-          docker build -t mrallo/mira:latest artifacts
+          docker build -t mrallo/mira:${{ github.sha }} artifacts
 
       - name: Login and push to Docker Hub
         env:
@@ -49,8 +49,9 @@ jobs:
         run: |
           if [ -n "$DOCKERHUB_USERNAME" ]; then
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            run: docker push mrallo/mira:latest
+            docker push mrallo/mira:${{ github.sha }}
+            docker tag mrallo/mira:${{ github.sha }} mrallo/mira:latest
+            docker push mrallo/mira:latest
           else
             echo "Skipping Docker push: DOCKERHUB_USERNAME not set"
           fi
- 
