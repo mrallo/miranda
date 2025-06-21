@@ -9,7 +9,6 @@ on:
   # Run on push events to the main and feature branches
   push:
     branches:
-    - main
     - feature/*
 
   # Enables a manual run workflow
@@ -24,74 +23,45 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential byacc
-
-      - name: Build the project
-        run: make all
-
-      - name: Run ./mira -V and capture output
-        id: version
-        run: |
-          if [ -f mira ]; then
-            ./mira -V | tee mira-version.txt
-          else
-            echo "mira binary not found after build"
-            exit 1
-          fi
-
-      - name: Add version output to GitHub Actions summary
-        run: |
-          echo '### `mira -V` Output' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          cat mira-version.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: mira-binary
-          path: |
-            miralib/
-            mira
-            mira.1
-
-  docker:
-    name: Docker
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download miranda artifacts
-        uses: actions/download-artifact@v4
-        with:
-          run-id: ${{ github.event.workflow_run.id }}
-          name: mira-binary
-          path: ./artifacts
-
-      - name: Create slim Docker image
+      - name: Build multi-stage Docker image
         run: |
           # Create Dockerfile
-          cat <<'EOF' > artifacts/Dockerfile
+          cat <<'EOF' > Dockerfile
+          # ---- Stage 1: Build inside container ----
+          FROM debian:bookworm AS builder
+
+          RUN apt-get update && \
+              apt-get install -y build-essential curl byacc man
+
+          WORKDIR /src
+          COPY . .
+
+          RUN make all
+
+          # ---- Stage 2: Minimal runtime ----
           FROM debian:bookworm-slim
 
-          # Copy all necessary files
-          COPY miralib/ /usr/local/lib/miralib/
-          COPY mira.1 /usr/share/man/man1/mira.1
-          COPY mira /usr/local/bin/mira
+          COPY --from=builder /src/miralib/ /usr/local/lib/miralib/
+          COPY --from=builder /src/mira.1 /usr/share/man/man1/mira.1
+          COPY --from=builder /src/mira /usr/local/bin/mira
 
-          # Optional: make man page available (only if man is installed in container)
-          RUN chmod +x /usr/local/bin/mira && \
-              mkdir -p /usr/share/man/man1 && \
+          RUN mkdir -p /usr/share/man/man1 && \
+              chmod +x /usr/local/bin/mira && \
               gzip -f /usr/share/man/man1/mira.1 || true
 
           ENV MIRALIB=/usr/local/lib/miralib
           ENTRYPOINT ["/usr/local/bin/mira"]
           EOF
 
-          docker build -t mira:${{ github.sha }} artifacts
+          docker build -t mira:${{ github.sha }} .
+
+      - name: Test image output
+        run: |
+          docker run --rm mira:${{ github.sha }} -V | tee mira-version.txt
+          echo '### `mira -V` Output' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat mira-version.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Login and push to Docker Hub
         env:
