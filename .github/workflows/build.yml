@@ -1,4 +1,4 @@
-name: Build project
+name: Build Miranda
 
 on:
   # Run on pull request events that target the main branch
@@ -30,7 +30,7 @@ jobs:
           sudo apt-get install -y build-essential byacc
 
       - name: Build the project
-        run: make
+        run: make all
 
       - name: Run ./mira -V and capture output
         id: version
@@ -52,8 +52,8 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: mira-runtime
+          name: mira-binary
           path: |
+            miralib/
             mira
             mira.1
-            miralib/
