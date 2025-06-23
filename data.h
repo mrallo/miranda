@@ -302,7 +302,7 @@ void acterror(void);
 word alfasort(word);
 void dieclean(void);
 word fixtype(word,word);
-word fm_time(char *);  /* assumes type word same size as time_t */
+word fm_time(const char *);  /* assumes type word same size as time_t */
 void fpe_error(void);
 word parseline(word,FILE *,word);
 word process(void);
@@ -311,8 +311,8 @@ void reset(void);
 word reverse(word);
 word shunt(word,word);
 word size(word);
-void syntax(char *);
-void yyerror(char *);
+void syntax(const char *);
+void yyerror(const char *);
 
 /* function prototypes - types.c */
 word add1(word,word);
