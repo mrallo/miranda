@@ -31,7 +31,7 @@ jobs:
           FROM debian:bookworm AS builder
 
           RUN apt-get update && \
-              apt-get install -y build-essential curl byacc man
+              apt-get install -y build-essential byacc
 
           WORKDIR /src
           COPY . .
@@ -41,6 +41,17 @@ jobs:
           # ---- Stage 2: Minimal runtime ----
           FROM debian:bookworm-slim
 
+          # Install useful CLI tools (vi, less, man, bash)
+          RUN apt-get update && \
+              apt-get install -y \
+                vim-tiny \
+                less \
+                man \
+                manpages \
+                bash \
+                gzip && \
+              rm -rf /var/lib/apt/lists/*
+    
           COPY --from=builder /src/miralib/ /usr/local/lib/miralib/
           COPY --from=builder /src/mira.1 /usr/share/man/man1/mira.1
           COPY --from=builder /src/mira /usr/local/bin/mira
