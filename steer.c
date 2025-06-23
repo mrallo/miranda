@@ -738,7 +738,7 @@ void commandloop(char *initscript) {
     if (setjmp(env) == 0) { /* returns here if interrupted, 0 means first time thru */
         if (magic) {
             undump(initscript); /* was loadfile() changed 26.11.2019
-                                        to allow dump of magic scripts in ".m"*/
+                                   to allow dump of magic scripts in ".m"*/
             if (files == NIL || ND != NIL || id_val(main_id) == UNDEF)
             /* files==NIL=>script absent or has syntax errors
                ND!=NIL=>script has type errors or undefined names
@@ -1413,6 +1413,7 @@ void editfile(const char *t, int line) {
         p = ebuf + strlen(ebuf); // Move p to the end of the current string
         *p++ = ' ';
         *p++ = '"';
+        *p = '\0';
         size_t remaining_space = sizeof(linebuf) - (p - ebuf);
         strncat(p, t, remaining_space - 1);
         p += strlen(p);
