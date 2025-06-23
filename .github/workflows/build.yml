@@ -64,7 +64,7 @@ jobs:
           RUN groupadd --system mira && useradd --system --create-home --shell /bin/bash --gid mira mira
           
           # Make miralib user-owned
-          RUN chown -R mira:mira /usr/local/share/miralib
+          RUN chown -R mira:mira /usr/local/lib/miralib
           
           # Switch to non-root user
           USER mira
