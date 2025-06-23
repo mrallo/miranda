@@ -72,7 +72,7 @@ jobs:
           # Default working directory
           WORKDIR /home/mira
 
-          ENV MIRALIB=/usr/local/lib/miralib
+          ENV MIRALIB=/usr/local/lib/miralib \
               MIRAPROMPT='Miranda> '
 
           ENTRYPOINT ["/usr/local/bin/mira"]
