@@ -28,8 +28,8 @@ COPY --from=builder /src/mira.1 /usr/local/share/man/man1/mira.1
 COPY --from=builder /src/mira /usr/local/bin/mira
 
 RUN mkdir -p /usr/local/share/man/man1 && \
-chmod +x /usr/local/bin/mira && \
-gzip -f /usr/local/share/man/man1/mira.1 || true
+    chmod +x /usr/local/bin/mira && \
+    gzip -f /usr/local/share/man/man1/mira.1 || true
 
 # Create a non-root user and group
 RUN groupadd --system mira && useradd --system --create-home --shell /bin/bash --gid mira mira
