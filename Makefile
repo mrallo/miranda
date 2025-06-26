@@ -4,8 +4,8 @@ LIB=usr/local/lib
 MAN=usr/local/man/man1
 
 CC = gcc -w
-CFLAGS = 
-EX = 
+CFLAGS =
+EX =
 YACC = byacc
 
 OBJS = big.o cmbnms.o data.o lex.o reduce.o steer.o trans.o types.o utf8.o y.tab.o

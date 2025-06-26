@@ -103,7 +103,7 @@ char *dir;
          strcat(cmd," ");
          strcat(cmd,"contents");
          system(cmd);
-         printf("::please type selection number (or return to exit):");
+         printf("Please type selection number (or return to exit): ");
          /* read remainder of line into next, less leading white space */
          np=next; c=getchar();
          while(c==' '||c=='\t')c=getchar();
@@ -151,7 +151,7 @@ char *dir;
                  }
                else
              { printf(
-            "::next selection (or return to go back to menu, or q to quit):"
+            "Next selection (or return to go back to menu, or q to quit):"
                      );
               /* read remainder of line into next, less leading white space */
                strcpy(last,next);
