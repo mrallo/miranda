@@ -1,0 +1,56 @@
+name: Build CI
+
+on:
+  # Run on pull request events that target the main branch
+  pull_request:
+    branches:
+    - main
+
+  # Run on push events to the main and feature branches
+  push:
+    branches:
+    - bugfix/*
+    - feature/*
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential byacc
+
+      - name: Build the project
+        run: make all
+
+      - name: Run ./mira -V and capture output
+        id: version
+        run: |
+          if [ -f mira ]; then
+            ./mira -V | tee mira-version.txt
+          else
+            echo "mira binary not found after build"
+            exit 1
+          fi
+
+      - name: Add version output to GitHub Actions summary
+        run: |
+          echo '### `mira -V` Output' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat mira-version.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mira-binary
+          path: |
+            miralib/
+            mira
+            mira.1
