@@ -27,8 +27,8 @@ COPY --from=builder /src/miralib/ /usr/local/lib/miralib/
 COPY --from=builder /src/mira.1 /usr/local/share/man/man1/mira.1
 COPY --from=builder /src/mira /usr/local/bin/mira
 
-RUN mkdir -p /usr/local/share/man/man1 && \
-    chmod +x /usr/local/bin/mira && \
+RUN chmod +x /usr/local/bin/mira && \
+    mkdir -p /usr/local/share/man/man1 && \
     gzip -f /usr/local/share/man/man1/mira.1 || true
 
 # Create a non-root user and group
