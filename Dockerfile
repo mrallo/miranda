@@ -32,7 +32,8 @@ RUN chmod +x /usr/local/bin/mira && \
     gzip -f /usr/local/share/man/man1/mira.1 || true
 
 # Create a non-root user and group
-RUN groupadd --system mira && useradd --system --create-home --shell /bin/bash --gid mira mira
+RUN groupadd --system mira && \
+    useradd --system --create-home --shell /bin/bash --gid mira mira
 
 # Make miralib user-owned
 RUN chown -R mira:mira /usr/local/lib/miralib
