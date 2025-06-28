@@ -1,4 +1,6 @@
 # Miranda System
+[![Docker](https://github.com/mrallo/miranda/actions/workflows/deploy-image.yml/badge.svg?branch=main)](https://github.com/mrallo/miranda/actions/workflows/deploy-image.yml)
+[![CI](https://github.com/mrallo/miranda/actions/workflows/build-ci.yml/badge.svg)](https://github.com/mrallo/miranda/actions/workflows/build-ci.yml)
 
 This directory contains everything you should need to create a working
 version of the Miranda system.
