@@ -180,6 +180,8 @@ _Noreturn void dieclean(void);
 _Noreturn void fpe_error(void);
 _Noreturn void missparam(const char *s);
 
+void printver(void);
+
 /* Main program entry point */
 int main(int argc, char *argv[]) {
     word manonly = 0;
