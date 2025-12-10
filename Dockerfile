@@ -1,5 +1,5 @@
 # ---- Stage 1: Build inside container ----
-FROM debian:bookworm AS builder
+FROM debian:trixie AS builder
 
 RUN apt-get update && \
     apt-get install -y build-essential byacc
@@ -10,7 +10,7 @@ COPY . .
 RUN make all
 
 # ---- Stage 2: Minimal runtime ----
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 # Install useful CLI tools (vi, less, man, bash)
 RUN apt-get update && \
