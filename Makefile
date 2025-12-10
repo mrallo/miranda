@@ -4,7 +4,7 @@ LIB=usr/local/lib
 MAN=usr/local/man/man1
 
 CC = gcc -w
-CFLAGS =
+CFLAGS = -O2
 EX =
 YACC = byacc
 
